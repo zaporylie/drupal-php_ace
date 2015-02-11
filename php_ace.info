@@ -1,0 +1,7 @@
+name = Ace Editor for PHP textarea
+description = Lets you edit your code with the Ace Editor support.
+package = Administration
+core = 7.x
+configure = admin/config/content/php-ace
+
+dependencies[] = libraries

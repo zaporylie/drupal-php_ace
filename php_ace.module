@@ -1,0 +1,98 @@
+<?php
+/**
+ * @file
+ * php_ace.module
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function php_ace_menu() {
+
+  $items['admin/config/content/php-ace'] = array(
+    'title' => 'PHP Ace Editor',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('php_ace_settings_form'),
+    'access arguments' => array('access administration pages'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function php_ace_libraries_info() {
+  $libraries['ace'] = array(
+    'title' => 'Ace Editor',
+    'vendor url' => 'http://ace.c9.io/',
+    'download url' => 'https://github.com/ajaxorg/ace-builds/archive/master.zip',
+    'version arguments' => array(
+      'file' => 'package.json',
+      'pattern' => '/"version": "(\d+\.+\d+.+\d+)"/',
+      'lines' => 3,
+    ),
+    'files' => array(
+      'js' => array(
+        'src/ace.js',
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function php_ace_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id) {
+    case 'devel_execute_block_form':
+    case 'devel_execute_form':
+      $form['execute']['code']['#attached']['libraries_load'][] = array('ace');
+      $form['execute']['code']['#attached']['js'][] = drupal_get_path('module', 'php_ace') . '/js/php_ace.js';
+      $form['execute']['code']['#attached']['css'][] = drupal_get_path('module', 'php_ace') . '/css/php_ace.css';
+      $form['execute']['code']['#attributes']['class'][] = 'ace-enabled';
+      break;
+
+    default:
+
+      break;
+  }
+}
+
+function php_ace_settings_form($form, &$form_state) {
+
+  // Turn on/off Ace Editor for php_code text format.
+  $form['php_ace_php_code_format'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Turn on Ace Editor for PHP Code text format?'),
+    '#default_value' => variable_get('php_ace_php_code_format', TRUE),
+  );
+
+  // Turn on/off Ace Editor for Devel PHP.
+  $form['php_ace_devel_php'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Turn on Ace Editor for Devel PHP textarea?'),
+    '#default_value' => variable_get('php_ace_devel_php', TRUE),
+  );
+
+  // Turn on Ace Editor for selector list.
+  $form['php_ace_selectors_on'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Turn on Ace Editor for listed selectors'),
+    '#default_value' => variable_get('php_ace_selectors_on', ''),
+    '#description' => t('It has to be list of correct jQuery selectors, one selector per line'),
+  );
+
+  // Turn off Ace Editor for selector list.
+  $form['php_ace_selectors_off'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Turn on Ace Editor for listed selectors'),
+    '#default_value' => variable_get('php_ace_selectors_off', ''),
+    '#description' => t('It has to be list of correct jQuery selectors, one selector per line'),
+  );
+
+  return system_settings_form($form);
+}
