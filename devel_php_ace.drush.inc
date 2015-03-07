@@ -7,9 +7,9 @@
 /**
  * Implements hook_drush_command().
  */
-function php_ace_drush_command() {
+function devel_php_ace_drush_command() {
   $items['dl-ace'] = array(
-    'callback' => 'php_ace_drush_download',
+    'callback' => 'devel_php_ace_drush_download',
     'description' => dt('Downloads required ACE Editor library.'),
   );
 
@@ -19,7 +19,7 @@ function php_ace_drush_command() {
 /**
  * ACE Editor download callback.
  */
-function php_ace_drush_download() {
+function devel_php_ace_drush_download() {
   $library = libraries_load('ace');
   $libraries_path = 'sites/all/libraries';
   $path = 'sites/all/libraries/ace';

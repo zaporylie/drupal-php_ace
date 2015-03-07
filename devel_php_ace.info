@@ -1,0 +1,6 @@
+name = Devel PHP ACE Editor
+description = Adds ACE Editor to Execute PHP forms.
+package = Development
+core = 7.x
+
+dependencies[] = libraries
